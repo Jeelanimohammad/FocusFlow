@@ -1,6 +1,6 @@
 
 import sqlite3
-from passlib.hash import bcrypt
+import hashlib
 # ================= DB CONNECTION =================
 def get_connection():
     return sqlite3.connect("focusflow.db", check_same_thread=False)
@@ -30,8 +30,7 @@ def register_user(username, password):
     conn = get_connection()
     c = conn.cursor()
 
-    # 🔥 HASH PASSWORD (string, not bytes)
-    hashed_pw = bcrypt.hash(password)
+    hashed_pw = hashlib.sha256(password.encode()).hexdigest()
 
     try:
         c.execute(
@@ -46,7 +45,6 @@ def register_user(username, password):
         conn.close()
         return False, "Username already exists"
 
-
 # ================= LOGIN =================
 def login_user(username, password):
     conn = get_connection()
@@ -59,10 +57,12 @@ def login_user(username, password):
 
     if user:
         stored_password = user[2]
+        hashed_input = hashlib.sha256(password.encode()).hexdigest()
 
-        # 🔥 VERIFY PASSWORD (simple)
-        if bcrypt.verify(password, stored_password):
+        if hashed_input == stored_password:
             return user
+
+    return None
 
     return None
 
