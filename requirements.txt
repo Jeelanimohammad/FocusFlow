@@ -1,4 +1,6 @@
 streamlit
 pandas
 matplotlib
-passlib
+passlib[bcrypt]
+bycrypt
+
