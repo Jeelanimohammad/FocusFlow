@@ -1,5 +1,4 @@
 streamlit
 pandas
 matplotlib
-transformers
-bycrypt
+bycrypt==4.0.1
